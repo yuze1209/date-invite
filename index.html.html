@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>甜蜜约会邀请</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+:root{--dp:100dvh;--safe-top:env(safe-area-inset-top);--safe-btm:env(safe-area-inset-bottom)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+body{background:linear-gradient(135deg,#e2d5f8,#d4c2f0);min-height:var(--dp);padding:20px;position:relative;overflow-x:hidden}
+body::before,body::after,.bg-dot1,.bg-dot2{content:'';position:absolute;border-radius:50%;filter:blur(60px);z-index:0}
+body::before{width:320px;height:320px;background:#ffc8d8;top:-80px;left:-60px}
+body::after{width:280px;height:280px;background:#fff2cc;bottom:-100px;right:-40px}
+.bg-dot1{width:220px;height:220px;background:#f8d8ec;top:40%;right:-80px}
+.bg-dot2{width:180px;height:180px;background:#fff1d0;left:-50px;bottom:30%}
+.container{width:440px;min-height:820px;background:linear-gradient(to bottom,#ffffff,#f8f4ff);border-radius:42px;border:1px solid rgba(255,255,255,0.7);box-shadow:0 12px 40px rgba(120,90,160,0.25);margin:0 auto;padding:calc(var(--safe-top)+24px) 24px calc(var(--safe-btm)+24px);position:relative;z-index:1}
+@media(max-width:480px){.container{width:100%;min-height:var(--dp);border-radius:0;box-shadow:none;border:none}}
+.step{display:none;flex-direction:column;align-items:center;justify-content:flex-start;min-height:calc(var(--dp) - 100px);gap:22px;animation:fadeUp 0.4s ease forwards;opacity:0;transform:translateY(12px)}
+.step.active{display:flex}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+.heart-progress{display:flex;gap:10px;margin-bottom:16px}
+.heart{font-size:22px;color:#d0d0d0;transition:all 0.3s ease}
+.heart.done,.heart.current{color:#f278b8}
+h1{font-size:28px;font-weight:900;color:#5a3880;text-align:center;line-height:1.3}
+.sub{color:#906cb0;font-size:16px;text-align:center;line-height:1.6;margin-bottom:10px}
+.art-box{width:160px;height:160px;position:relative;margin:10px 0}
+.heart-block{width:90px;height:90px;background:#f8a8c8;border-radius:18px;margin:0 auto;clip-path:path('M45,15 C70,0 90,20 90,45 C90,75 45,90 45,90 C45,90 0,75 0,45 C0,20 20,0 45,15 Z')}
+.dash-circle{position:absolute;top:50%;left:50%;width:130px;height:130%;border:2px dashed #e8b8d8;border-radius:50%;transform:translate(-50%,-50%);animation:spin 9s linear infinite}
+.shine{position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;box-shadow:0 0 12px #fff;animation:twinkle 2.5s ease infinite alternate}
+.shine1{top:10px;right:15px}
+.shine2{bottom:20px;left:12px}
+@keyframes spin{100%{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes twinkle{from{opacity:0.4}to{opacity:1}}
+.btn-wrap{width:100%;min-height:210px;position:relative;margin-top:15px}
+.btn{padding:14px 32px;border:none;border-radius:50px;font-size:18px;font-weight:600;cursor:pointer;transition:all 0.36s ease;box-shadow:0 4px 12px rgba(0,0,0,0.1);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);touch-action:manipulation}
+.btn-yes{background:linear-gradient(to right,#f088b8,#e86aaa);color:#fff}
+.btn-no{background:#ffffff;color:#7a55a0;border:1px solid #e0d0f0}
+.btn.next{width:85%;padding:16px;background:linear-gradient(to right,#ffdd88,#ffcc55);color:#553311;border-radius:50px;font-size:19px;font-weight:bold}
+.back-btn{position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.8);border:none;border-radius:30px;padding:6px 12px;color:#664499;font-size:14px;z-index:99}
+.emoji{font-size:60px;margin:10px 0}
+.form-item{width:100%;margin:8px 0}
+.form-item label{display:block;color:#664499;margin-bottom:6px}
+.form-item input{width:100%;padding:12px;border-radius:16px;border:1px solid #e0d0f0;background:#fff;font-size:16px}
+.food-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%}
+.food-item{padding:14px 8px;border-radius:16px;background:#f3ebff;text-align:center;cursor:pointer;transition:0.3s}
+.food-item.active{background:#f8c8e0;color:#fff}
+.summary{background:rgba(255,255,255,0.85);border-radius:20px;padding:18px;width:100%;line-height:1.8;color:#5a3880}
+.btn:focus-visible{outline:2px solid #e86aaa;outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="heart-progress" aria-label="约会步骤进度">
+<div class="heart current">♥</div>
+<div class="heart">♥</div>
+<div class="heart">♥</div>
+<div class="heart">♥</div>
+<div class="heart">♥</div>
+</div>
+
+<div class="step active" id="step1">
+<h1>可以和我一起约会吗？</h1>
+<p class="sub">超认真邀请，不许狠心拒绝呀✨</p>
+<div class="art-box">
+<div class="heart-block"></div>
+<div class="dash-circle"></div>
+<div class="shine shine1"></div>
+<div class="shine shine2"></div>
+</div>
+<div class="btn-wrap" id="btnArea">
+<button class="btn btn-yes" id="btnYes" aria-label="同意约会">愿意</button>
+<button class="btn btn-no" id="btnNo" aria-label="拒绝约会">不要</button>
+</div>
+</div>
+
+<div class="step" id="step2">
+<button class="back-btn" onclick="prevStep()">返回</button>
+<div class="emoji">🥰</div>
+<h1>太开心啦！</h1>
+<p class="sub">你居然答应我啦，幸福感爆棚～</p>
+<button class="btn next" onclick="nextStep()">继续安排约会</button>
+</div>
+
+<div class="step" id="step3">
+<button class="back-btn" onclick="prevStep()">返回</button>
+<h1>约定约会时间</h1>
+<div class="form-item">
+<label>约会日期</label>
+<input type="date" id="date">
+</div>
+<div class="form-item">
+<label>约会时间</label>
+<input type="time" id="time" value="17:00">
+</div>
+<button class="btn next" onclick="saveTime();nextStep()">确认时间</button>
+</div>
+
+<div class="step" id="step4">
+<button class="back-btn" onclick="prevStep()">返回</button>
+<h1>选择约会美食</h1>
+<div class="food-grid">
+<div class="food-item" data="火锅">🍲火锅</div>
+<div class="food-item" data="烤肉">🥩烤肉</div>
+<div class="food-item" data="奶茶甜品">🧋甜品</div>
+<div class="food-item" data="日料">🍣日料</div>
+<div class="food-item" data="西餐">🥞西餐</div>
+<div class="food-item" data="烧烤">🍢烧烤</div>
+<div class="food-item" data="小龙虾">🦞龙虾</div>
+<div class="food-item" data="面馆">🍜面食</div>
+<div class="food-item" data="自助餐">🍱自助餐</div>
+</div>
+</div>
+
+<div class="step" id="step5">
+<button class="back-btn" onclick="prevStep()">返回</button>
+<div class="emoji">💖</div>
+<h1>约会约定完成</h1>
+<div class="summary" id="orderInfo"></div>
+<button class="btn next" onclick="shareCard()">保存约会卡片</button>
+<canvas id="cardCanvas" width="1080" height="1440" style="display:none"></canvas>
+</canvas>
+</div>
+</div>
+
+<script>
+const data={step:1,date:'',time:'',food:''};
+const noText=['不要','再想想嘛','点不到我','真的不要吗'];
+let noCount=0;
+const corners=[{x:1,y:1},{x:1,y:-1},{x:-1,y:-1},{x:-1,y:1}];
+const btnYes=document.getElementById('btnYes');
+const btnNo=document.getElementById('btnNo');
+const btnArea=document.getElementById('btnArea');
+
+//日期限制
+const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
+const fmt=(d)=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+document.getElementById('date').value=fmt(tomorrow);
+document.getElementById('date').min=fmt(new Date());
+
+//进度更新
+function updateProgress(){
+const hearts=document.querySelectorAll('.heart');
+hearts.forEach((h,i)=>{
+h.classList.remove('done','current');
+if(i<data.step-1)h.classList.add('done');
+else if(i===data.step-1)h.classList.add('current');
+});
+}
+
+//步骤切换
+function showStep(n){
+document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+document.getElementById('step'+n).classList.add('active');
+data.step=n;updateProgress();
+}
+function nextStep(){if(data.step<5)showStep(data.step+1);}
+function prevStep(){if(data.step>1){data.step--;showStep(data.step);}}
+
+//按钮躲避逻辑
+let firstNoClick=false;
+function calcNoPos(){
+const wr=btnArea.getBoundingClientRect();
+const br=btnNo.getBoundingClientRect();
+const pad=10;
+const c=corners[noCount%4];
+let x=c.x*(wr.width/2-br.width/2-pad);
+let y=c.y*(wr.height/2-br.height/2-pad);
+btnNo.style.left='50%';btnNo.style.top='50%';
+btnNo.style.transform=`translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+}
+btnNo.addEventListener('click',()=>{
+noCount++;
+btnNo.textContent=noText[noCount%noText.length];
+if(!firstNoClick){
+firstNoClick=true;
+btnYes.style.left='50%';btnYes.style.top='50%';
+btnYes.style.transform='translate(-50%,-50%)';
+btnYes.style.zIndex=99;
+}
+calcNoPos();
+});
+window.addEventListener('resize',calcNoPos);
+
+btnYes.addEventListener('click',()=>{nextStep();});
+
+//保存时间
+function saveTime(){
+data.date=document.getElementById('date').value;
+data.time=document.getElementById('time').value;
+}
+
+//美食选择
+document.querySelectorAll('.food-item').forEach(item=>{
+item.addEventListener('click',()=>{
+document.querySelectorAll('.food-item').forEach(i=>i.classList.remove('active'));
+item.classList.add('active');
+data.food=item.dataset;
+setTimeout(nextStep,300);
+});
+});
+
+//生成约会卡片&分享下载
+function shareCard(){
+document.getElementById('orderInfo').innerHTML=
+`📅 约会日期：${data.date}<br>
+⏰ 约会时间：${data.time}<br>
+🍽️ 约会美食：${data.food}`;
+const cv=document.getElementById('cardCanvas');
+const ctx=cv.getContext('2d');
+ctx.fillStyle='#f0e6ff';ctx.fillRect(0,0,1080,1440);
+ctx.fillStyle='#5a3880';ctx.font='bold 60px sans-serif';ctx.textAlign='center';
+ctx.fillText('甜蜜约会约定',540,200);
+ctx.font='42px sans-serif';
+ctx.fillText(`日期：${data.date}`,540,320);
+ctx.fillText(`时间：${data.time}`,540,400);
+ctx.fillText(`美食：${data.food}`,540,480);
+const blob=cv.toDataURL('image/png');
+if(navigator.share){
+navigator.share({title:'我的约会约定',files:[new File([blob],'约会卡片.png',{type:'image/png'})]}).catch(()=>{
+const a=document.createElement('a');a.href=blob;a.download='约会甜蜜卡片.png';a.click();
+});
+}else{
+const a=document.createElement('a');a.href=blob;a.download='约会甜蜜卡片.png';a.click();
+}
+}
+
+//键盘无障碍
+document.addEventListener('keydown',e=>{
+if(e.key==='Enter')document.activeElement.click();
+});
+</script>
+</body>
+</html>
