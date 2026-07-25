@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>甜蜜约会邀请</title>
+<style>
+body{margin:0;font-family:system-ui;background:linear-gradient(135deg,#e8d8ff,#ffd8e8);display:flex;justify-content:center;align-items:center;min-height:100vh;overflow:hidden}
+.card{width:min(92vw,420px);background:#fff;border-radius:24px;padding:24px;box-shadow:0 12px 30px rgba(0,0,0,.15);text-align:center;position:relative}
+h1{color:#7a3ea8}.heart{font-size:70px;animation:pulse 1.2s infinite}
+@keyframes pulse{50%{transform:scale(1.1)}}
+button{padding:12px 26px;border:none;border-radius:999px;font-size:17px;cursor:pointer}
+#yes{background:#f06aa6;color:#fff}
+#no{background:#eee;color:#555;position:absolute}
+.hidden{display:none}
+input,select{width:100%;padding:10px;margin:8px 0;border-radius:12px;border:1px solid #ddd}
+.float{position:fixed;animation:up 4s linear forwards;font-size:22px}
+@keyframes up{from{transform:translateY(110vh)}to{transform:translateY(-20vh);opacity:0}}
+</style>
+</head>
+<body>
+<div class="card">
+<div id="page1">
+<div class="heart">💖</div>
+<h1>可以和我一起约会吗？</h1>
+<p>超认真邀请，不许狠心拒绝呀 ✨</p>
+<button id="yes">愿意 ❤️</button>
+<button id="no">不要</button>
+</div>
+
+<div id="page2" class="hidden">
+<h1>太开心啦！🥰</h1>
+<input id="date" type="date">
+<input id="time" type="time" value="17:00">
+<input id="place" placeholder="约会地点">
+<select id="food">
+<option>火锅 🍲</option>
+<option>烤肉 🥩</option>
+<option>日料 🍣</option>
+<option>甜品 🧋</option>
+<option>西餐 🍝</option>
+</select>
+<button onclick="finish()">完成约定</button>
+</div>
+
+<div id="page3" class="hidden">
+<h1>约会完成 💕</h1>
+<div id="result"></div>
+</div>
+</div>
+
+<script>
+const no=document.getElementById("no");
+const yes=document.getElementById("yes");
+const p1=document.getElementById("page1");
+const p2=document.getElementById("page2");
+const p3=document.getElementById("page3");
+
+function moveNo(){
+ const w=300,h=220;
+ no.style.left=Math.random()*w+"px";
+ no.style.top=Math.random()*h+"px";
+ no.textContent=["不要","再想想🥺","点不到我","真的不要?"][Math.floor(Math.random()*4)];
+}
+no.onclick=moveNo;
+
+yes.onclick=()=>{
+ for(let i=0;i<40;i++){
+   const e=document.createElement("div");
+   e.className="float";
+   e.textContent="💖";
+   e.style.left=Math.random()*100+"vw";
+   document.body.appendChild(e);
+   setTimeout(()=>e.remove(),4000);
+ }
+ p1.classList.add("hidden");
+ p2.classList.remove("hidden");
+};
+
+const d=new Date();d.setDate(d.getDate()+1);
+document.getElementById("date").value=d.toISOString().slice(0,10);
+
+function finish(){
+ const html=`
+ <p>📅 ${date.value}</p>
+ <p>⏰ ${time.value}</p>
+ <p>📍 ${place.value||"待定"}</p>
+ <p>🍽️ ${food.value}</p>
+ <h2>期待与你见面 ❤️</h2>`;
+ result.innerHTML=html;
+ p2.classList.add("hidden");
+ p3.classList.remove("hidden");
+}
+</script>
+</body>
+</html>
